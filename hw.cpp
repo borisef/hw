@@ -19,7 +19,7 @@ int main()
     
     bool result2 = img_expert.CompareFolders(
         "/home/borisef/projects/cpp/hw/gt_folder",
-        "/home/borisef/projects/cpp/hw/gt_folder",
+        "/home/borisef/projects/cpp/hw/res_folder",
         "gt_",
         "res_",
         "png",

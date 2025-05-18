@@ -1,6 +1,6 @@
-// TableComparisonExpert.h
 #ifndef TABLE_COMPARISON_EXPERT_H
 #define TABLE_COMPARISON_EXPERT_H
+
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -8,6 +8,8 @@
 class TableComparisonExpert {
 public:
     enum Mode { SILENT, INFORMATIVE, DEBUG };
+
+    TableComparisonExpert();  // Constructor
 
     bool ReadCSVData(const std::string& gt_csv_path, const std::string& res_csv_path,
                      const std::string& frame_column_gt, const std::string& frame_column_res);
@@ -19,7 +21,7 @@ public:
                         double threshold = 0.0, const std::string& column_type = "float", Mode mode = SILENT);
 
 private:
-    using Row = std::unordered_map<std::string, std::string>;
+    typedef std::unordered_map<std::string, std::string> Row;
     std::vector<Row> gt_table, res_table;
     std::unordered_map<int, size_t> gt_frame_map, res_frame_map;
 
@@ -27,7 +29,7 @@ private:
     bool ParseCSV(const std::string& path, const std::string& frame_column,
                   std::vector<Row>& table, std::unordered_map<int, size_t>& frame_map);
 
-    Mode m_mode = SILENT;
+    Mode m_mode;
 };
 
 #endif // TABLE_COMPARISON_EXPERT_H

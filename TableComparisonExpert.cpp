@@ -1,10 +1,12 @@
-// TableComparisonExpert.cpp
 #include "TableComparisonExpert.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+
+// Constructor for C++11 (no inline initialization)
+TableComparisonExpert::TableComparisonExpert() : m_mode(SILENT) {}
 
 std::vector<std::string> TableComparisonExpert::SplitCSVLine(const std::string& line) {
     std::vector<std::string> result;
@@ -58,12 +60,12 @@ bool TableComparisonExpert::ReadCSVData(const std::string& gt_csv_path, const st
 bool TableComparisonExpert::CompareRows(int frameNumber, const std::string& columnName1,
                                         const std::string& columnName2, double threshold,
                                         const std::string& column_type) {
-    auto it1 = gt_frame_map.find(frameNumber);
-    auto it2 = res_frame_map.find(frameNumber);
+    std::unordered_map<int, size_t>::const_iterator it1 = gt_frame_map.find(frameNumber);
+    std::unordered_map<int, size_t>::const_iterator it2 = res_frame_map.find(frameNumber);
     if (it1 == gt_frame_map.end() || it2 == res_frame_map.end()) return false;
 
-    const auto& row1 = gt_table[it1->second];
-    const auto& row2 = res_table[it2->second];
+    const Row& row1 = gt_table[it1->second];
+    const Row& row2 = res_table[it2->second];
 
     if (row1.find(columnName1) == row1.end() || row2.find(columnName2) == row2.end()) {
         if (m_mode != SILENT) {
@@ -72,8 +74,8 @@ bool TableComparisonExpert::CompareRows(int frameNumber, const std::string& colu
         return false;
     }
 
-    const auto& val1 = row1.at(columnName1);
-    const auto& val2 = row2.at(columnName2);
+    const std::string& val1 = row1.at(columnName1);
+    const std::string& val2 = row2.at(columnName2);
 
     bool result = true;
     if (column_type == "bool") {
@@ -103,7 +105,8 @@ bool TableComparisonExpert::CompareAllRows(const std::string& columnName1,
                                            Mode mode) {
     m_mode = mode;
     bool all_passed = true;
-    for (const auto& [frame, idx] : res_frame_map) {
+    for (std::unordered_map<int, size_t>::const_iterator it = res_frame_map.begin(); it != res_frame_map.end(); ++it) {
+        int frame = it->first;
         if (!CompareRows(frame, columnName1, columnName2, threshold, column_type)) {
             all_passed = false;
         }
